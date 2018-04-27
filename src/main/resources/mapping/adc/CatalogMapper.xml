@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autobot.res.adc.dao.CatalogMapper">
+	<resultMap id="BaseResultMap" type="com.autobot.res.adc.model.Catalog">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+		<result column="serve_id" jdbcType="INTEGER" property="serveId" />
+		<result column="url" jdbcType="VARCHAR" property="url" />
+		<result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+		<result column="name_create" jdbcType="VARCHAR" property="nameCreate" />
+		<result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+		<result column="name_modified" jdbcType="VARCHAR" property="nameModified" />
+		<result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, parent_id, serve_id, url, gmt_create, name_create,
+		gmt_modified,
+		name_modified,
+		is_deleted
+	</sql>
+
+	<!-- 查详情 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from adc_catalog
+		where is_deleted = 0 and id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		adc_catalog
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.autobot.res.adc.model.Catalog">
+		insert into adc_catalog (id,
+		parent_id, serve_id,
+		url, gmt_create, name_create,
+		gmt_modified,
+		name_modified, is_deleted
+		)
+		values (#{id,jdbcType=VARCHAR},
+		#{parentId,jdbcType=VARCHAR},
+		#{serveId,jdbcType=INTEGER},
+		#{url,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
+		#{nameCreate,jdbcType=VARCHAR},
+		#{gmtModified,jdbcType=TIMESTAMP},
+		#{nameModified,jdbcType=VARCHAR},
+		#{isDeleted,jdbcType=TINYINT}
+		)
+	</insert>
+
+	<!-- insert -->
+	<insert id="insertSelective" parameterType="com.autobot.res.adc.model.Catalog"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into adc_catalog
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="serveId != null">
+				serve_id,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create,
+			</if>
+			<if test="nameCreate != null">
+				name_create,
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified,
+			</if>
+			<if test="nameModified != null">
+				name_modified,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="serveId != null">
+				#{serveId,jdbcType=INTEGER},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="gmtCreate != null">
+				#{gmtCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="nameCreate != null">
+				#{nameCreate,jdbcType=VARCHAR},
+			</if>
+			<if test="gmtModified != null">
+				#{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="nameModified != null">
+				#{nameModified,jdbcType=VARCHAR},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.autobot.res.adc.model.Catalog">
+		update adc_catalog
+		<set>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="serveId != null">
+				serve_id = #{serveId,jdbcType=INTEGER},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="nameModified != null">
+				name_modified = #{nameModified,jdbcType=VARCHAR},
+			</if>
+			gmt_modified = NOW()
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.autobot.res.adc.model.Catalog">
+		update adc_catalog
+		set parent_id = #{parentId,jdbcType=INTEGER},
+		serve_id =
+		#{serveId,jdbcType=INTEGER},
+		url = #{url,jdbcType=VARCHAR},
+		gmt_create =
+		#{gmtCreate,jdbcType=TIMESTAMP},
+		name_create =
+		#{nameCreate,jdbcType=VARCHAR},
+		gmt_modified =
+		#{gmtModified,jdbcType=TIMESTAMP},
+		name_modified =
+		#{nameModified,jdbcType=VARCHAR},
+		is_deleted =
+		#{isDeleted,jdbcType=TINYINT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 手动添加 begin -->
+
+	<!-- 逻辑删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		UPDATE adc_catalog
+		<set>
+			gmt_modified = now(),
+			is_deleted=1
+		</set>
+		<where>
+			id = #{id,jdbcType=VARCHAR}
+		</where>
+	</delete>
+
+	<!-- 查详情 -->
+	<select id="listCatalog" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from adc_catalog
+		<where>
+			is_deleted = 0
+			<if test="query.id != null">
+				AND id = #{query.id,jdbcType=VARCHAR}
+			</if>
+			<if test="query.parentId != null">
+				AND parent_id = #{query.parentId,jdbcType=VARCHAR}
+			</if>
+			<if test="query.serveId != null">
+				AND serve_id = #{query.serveId,jdbcType=INTEGER},
+			</if>
+			<if test="query.url != null">
+				AND url = #{query.url,jdbcType=VARCHAR},
+			</if>
+			<if test="query.nameCreate != null">
+				AND name_create = #{query.nameCreate,jdbcType=VARCHAR},
+			</if>
+			<if test="query.nameModified != null">
+				AND name_modified =
+				#{query.nameModified,jdbcType=VARCHAR},
+			</if>
+		</where>
+		order by gmt_create desc
+	</select>
+
+	<!-- 批量创建目录 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into adc_catalog (id,
+		parent_id, serve_id,
+		url, gmt_create,
+		name_create,
+		gmt_modified,
+		name_modified, is_deleted
+		)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.id,jdbcType=VARCHAR},
+			#{item.parentId,jdbcType=VARCHAR},
+			#{item.serveId,jdbcType=INTEGER},
+			#{item.url,jdbcType=VARCHAR}, NOW(),
+			#{item.nameCreate,jdbcType=VARCHAR},
+			NOW(),
+			#{item.nameModified,jdbcType=VARCHAR},
+			0
+
+			)
+		</foreach>
+	</insert>
+	
+	<!-- 删除目录 -->
+	<delete id="deleteByServeId" parameterType="java.lang.Integer">
+		UPDATE adc_catalog
+		<set>
+			gmt_modified = now(),
+			is_deleted=1
+		</set>
+		<where>
+			serve_id = #{serveId,jdbcType=INTEGER}
+		</where>
+	</delete>
+
+</mapper>
